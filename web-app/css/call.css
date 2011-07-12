@@ -1,0 +1,75 @@
+
+#leftAccordion {
+	font-size: 0.9em;
+}
+#rightAccordion {
+	font-size: 0.9em;
+}
+
+#leftSide {
+	height: 25em;
+}
+#rightSide {
+	height: 25em;
+}
+
+#taskArea {
+	min-height: 25em;
+}
+dl.newItem dd {
+	text-align: right;
+	font-weight: bold;
+}
+dl.newItem {
+	font-size:0.9em;
+	margin-bottom: 2em;
+}
+dl.newItem dd ul {
+	list-style: none;
+}
+
+#callResultGridContainer {
+	font-size:0.9em;
+}
+
+#callResultGridContainer table {
+	width: 12em;
+}
+
+#callResultGridContainer table thead tr th {
+	width: 1.5em;
+}
+#callResultGridContainer table tbody tr td {
+	width: 1.5em;
+	border-left: thin dotted grey;
+	border-top: thin dotted grey;
+}
+#callResultGridContainer table tbody tr th {
+	text-align: right;
+	width: 4em;
+}
+
+#callHistoryContainer ul {
+	padding-left: 0.75em;
+}
+#callHistoryContainer {
+	font-size: 0.9em;
+}
+
+#newTaskButtons button {
+	vertical-align: bottom;
+	width: 128px;
+	height: 128px;
+	margin-left: 20px;
+	margin-top: 2em;
+}
+
+td.callResultGrid-success {
+	background-color: green;
+}
+td.callResultGrid-fail {
+	background-color: red;
+}
+td.callResultGrid-problem {
+	background-color: yellow;
+}
