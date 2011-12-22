@@ -118,6 +118,26 @@ class LogCallController {
 				// default to outgoing
 				directionInstance = BatchDirection.findByName('outgoing')
 			}
+
+			// look to see if one is still pending
+			def trackedItemInstance = TrackedItem.createCriteria().get{
+				batch{
+					and {
+						instruments{
+							instrument{ idEq(instrumentInstance.id) }
+						}
+						direction{ idEq(directionInstance.id) }
+					}
+					order("dateCreated", "desc")
+				}
+				maxResults(1)
+			}
+
+			def itemCallResultInstance = null
+
+			if (trackedItemInstance) {
+				throw finishThisException
+			}
 			
 			// generate batch/sid
 			def trackedItemInstance = batchService.createCallingItem(username, personInstance, null, null, instrumentInstance, directionInstance)
