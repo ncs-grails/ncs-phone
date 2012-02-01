@@ -1,6 +1,6 @@
 package edu.umn.ncs.phone
 
-import org.codehaus.groovy.grails.plugins.springsecurity.Secured
+import grails.plugins.springsecurity.Secured
 
 @Secured(['ROLE_NCS_IT'])
 class CallResultCategoryController {

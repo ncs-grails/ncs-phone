@@ -3,12 +3,12 @@ package edu.umn.ncs.phone
 import org.codehaus.groovy.grails.plugins.orm.auditable.AuditLogEvent
 import edu.umn.ncs.*
 import org.joda.time.LocalDate
-import org.codehaus.groovy.grails.plugins.springsecurity.Secured
+import grails.plugins.springsecurity.Secured
 
 @Secured(['ROLE_NCS_CALLING'])
 class LogCallController {
 	
-	def authenticateService
+	def springSecurityService
 
 	def batchService
 	
@@ -98,7 +98,7 @@ class LogCallController {
 		and give a kind of dashboard to jump off of. */
 	def routeCall = {
 		// get the username from the authenticated principal (person) from the auth service
-		def username = authenticateService?.principal()?.getUsername()
+		def username = springSecurityService?.principal?.getUsername()
 		def now = new Date()
 		def twoWeeksAgo = now - 14
 		def personInstance = Person.read(params?.id)
@@ -147,7 +147,7 @@ class LogCallController {
 	def newCallToPerson = {
 		
 		// get the username from the authenticated principal (person) from the auth service
-		def username = authenticateService?.principal()?.getUsername()
+		def username = springSecurityService?.principal?.getUsername()
 		def now = new Date()
 		def personInstance = Person.read(params?.id)
 		
@@ -227,7 +227,7 @@ class LogCallController {
 		def trackedItemInstanceList = []
 		def deletedTransactionsList = []
 		// get the username from the authenticated principal (person) from the auth service
-		def username = authenticateService?.principal()?.getUsername()
+		def username = springSecurityService?.principal?.getUsername()
 
 		if (params?.id) {
 			def idList = params?.id.split(',')

@@ -1,12 +1,12 @@
 package edu.umn.ncs.phone
 
 import edu.umn.ncs.*
-import org.codehaus.groovy.grails.plugins.springsecurity.Secured
+import grails.plugins.springsecurity.Secured
 
 @Secured(['ROLE_NCS_CALLING'])
 class ReportController {
 
-	def authenticateService
+	def springSecurityService
 	def debug = false
 	
     def index = {

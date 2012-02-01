@@ -3,13 +3,13 @@ package edu.umn.ncs.phone
 import edu.umn.ncs.*
 import org.joda.time.LocalDateTime
 import org.joda.time.format.DateTimeFormat
-import org.codehaus.groovy.grails.plugins.springsecurity.Secured
+import grails.plugins.springsecurity.Secured
 
 @Secured(['ROLE_NCS_CALLING'])
 class AdministriviaController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-	def authenticateService
+	def springSecurityService
 	
 	def debug = false
 
@@ -27,7 +27,7 @@ class AdministriviaController {
 		if (debug) { println "AdministriviaController:save:params::${params}\n" }
 
 		// get the username from the authenticated principal (person) from the auth service
-		def username = authenticateService?.principal()?.getUsername()
+		def username = springSecurityService?.principal?.getUsername()
 		
         def administriviaInstance = new Administrivia(params)
 		

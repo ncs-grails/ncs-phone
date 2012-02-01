@@ -3,13 +3,13 @@ package edu.umn.ncs.phone
 import edu.umn.ncs.*
 import org.joda.time.LocalDateTime
 import org.joda.time.format.DateTimeFormat
-import org.codehaus.groovy.grails.plugins.springsecurity.Secured
+import grails.plugins.springsecurity.Secured
 
 @Secured(['ROLE_NCS_CALLING'])
 class CallController {
 
 	def reportService
-	def authenticateService	
+	def springSecurityService	
 	def debug = false
 	
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
@@ -25,7 +25,7 @@ class CallController {
 		if (debug) { println "DEBUG: call.save.params: ${params}" }
 		
 		// get the username from the authenticated principal (person) from the auth service
-		def username = authenticateService?.principal()?.getUsername()
+		def username = springSecurityService?.principal?.getUsername()
 		
         def callInstance = new Call(params)
 		

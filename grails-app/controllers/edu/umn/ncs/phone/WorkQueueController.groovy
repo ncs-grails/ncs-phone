@@ -1,14 +1,14 @@
 package edu.umn.ncs.phone
 
 import edu.umn.ncs.*
-import org.codehaus.groovy.grails.plugins.springsecurity.Secured
+import grails.plugins.springsecurity.Secured
 
 @Secured(['ROLE_NCS_CALLING'])
 class WorkQueueController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
-	def authenticateService
+	def springSecurityService
 
     def index = {
         redirect(action: "list", params: params)

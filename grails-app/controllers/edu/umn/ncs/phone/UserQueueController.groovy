@@ -1,12 +1,12 @@
 package edu.umn.ncs.phone
 
 import edu.umn.ncs.*
-import org.codehaus.groovy.grails.plugins.springsecurity.Secured
+import grails.plugins.springsecurity.Secured
 
 @Secured(['ROLE_NCS_CALLING'])
 class UserQueueController {
 	
-	def authenticateService
+	def springSecurityService
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
@@ -41,7 +41,7 @@ class UserQueueController {
 
     def show = {
 		// get the username from the authenticated principal (person) from the auth service
-		def username = authenticateService?.principal()?.getUsername()
+		def username = springSecurityService?.principal?.getUsername()
 
         def userQueueInstance = UserQueue.findByUsername(username)
 		if (!userQueueInstance) {
