@@ -94,11 +94,61 @@ class LogCallController {
 		}
 	}
 
+	/** this action is used to route calls to/from participants
+		and give a kind of dashboard to jump off of. */
+	def routeCall = {
+		// get the username from the authenticated principal (person) from the auth service
+		def username = authenticateService?.principal()?.getUsername()
+		def now = new Date()
+		def twoWeeksAgo = now - 14
+		def personInstance = Person.read(params?.id)
+		def formatIdList = InstrumentFormat.findAllByGroupName('phone').collect{it.id}
+
+		if (personInstance) {
+			// list recently closed calls
+			def recentlyClosedItemCallResultInstanceList = ItemCallResult.createCriteria().list{
+				and{
+					gt('dateClosed', twoWeeksAgo)
+					trackedItem{
+						person{ idEq(personInstance.id) }
+					}
+				}
+				order('dateClosed', 'desc')
+			}
+
+			def closedItemIds = recentlyClosedItemCallResultInstanceList.collect{ it.trackedItem.id }
+
+			// list all open calls
+			def openCallsTrackedItemInstanceList = TrackedItem.createCriteria().list{
+				and{
+					person{ idEq(personInstance.id) }
+					isNull('result')
+					batch{ format{ 'in'("id", formatIdList) } }
+					not{ 'in'("id", closedItemIds) }
+				}
+			}
+
+			// list call type available to create
+			def callingInstrumentInstanceList = Instrument.createCriteria().list{
+				or {
+					ilike('name', '%phone%')
+					ilike('name', '%call%')
+				}
+				order('name', 'asc')
+			}
+
+			// TODO: in the view: link to personal and work queues
+		} else {
+			flash.message = "No such person, ID: ${params?.id}."
+			redirect(controller:'userQueue', action:'list')
+		}
+	}
+
 	def newCallToPerson = {
 		
 		// get the username from the authenticated principal (person) from the auth service
 		def username = authenticateService?.principal()?.getUsername()
-
+		def now = new Date()
 		def personInstance = Person.read(params?.id)
 		
 		if ( ! personInstance ) {
@@ -139,8 +189,26 @@ class LogCallController {
 				throw finishThisException
 			}
 			
-			// generate batch/sid
-			def trackedItemInstance = batchService.createCallingItem(username, personInstance, null, null, instrumentInstance, directionInstance)
+			// list all open calls
+			trackedItemInstance = TrackedItem.createCriteria().get{
+				and{
+					person{ idEq(personInstance.id) }
+					isNull('result')
+					batch{
+						instruments {
+							instrument { idEq(instrumentInstance.id) }
+						}
+						direction{ idEq(directionInstance.id) }
+						order('dateCreated', 'desc')
+					}
+				}
+				maxResults(1)
+			}
+
+			if (! trackedItemInstance) {
+				// generate batch/sid
+				trackedItemInstance = batchService.createCallingItem(username, personInstance, null, null, instrumentInstance, directionInstance)
+			}
 			
 			// Add to User Queue
 			def userQueueInstance = UserQueue.findByUsername(username)

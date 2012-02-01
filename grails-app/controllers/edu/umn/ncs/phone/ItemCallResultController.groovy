@@ -34,6 +34,7 @@ class ItemCallResultController {
 			// fill in the collections that fill the page. (or should we AJAX this?)
 			
 			resultInstanceList = Result.createCriteria().list{
+				eq('phoneCall', true)
 				order 'name', 'asc'
 			}
 			
