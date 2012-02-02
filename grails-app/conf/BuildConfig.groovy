@@ -36,10 +36,23 @@ grails.project.dependency.resolution = {
         // runtime 'mysql:mysql-connector-java:5.1.5'
     }
     plugins {
+		compile ":hibernate:$grailsVersion"
+		compile ":tomcat:$grailsVersion"
+
 		compile ":spring-security-core:1.2.7.2"
 		compile ":spring-security-ldap:1.0.5.1"
-		compile ":spring-security-shibboleth-native-sp:1.0.2"
+		compile ":spring-security-shibboleth-native-sp:1.0.3"
 		provided ":spring-security-mock:1.0.1"
+
+		compile ":audit-logging:0.5.4"
+		test ":code-coverage:1.2.5"
+		test ":codenarc:0.16.1"
+		compile ":joda-time:1.0"
+		compile ":jquery:1.6.1.1"
+		compile ":ncs-calling:0.1"
+		compile ":ncs-people:0.2"
+		compile ":ncs-tracking:0.5"
+		compile ":ncs-web-template:0.2"
 	}
 }
 
