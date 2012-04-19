@@ -15,14 +15,14 @@ class CallController {
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
     def create = {
-		if (debug) { println "DEBUG: call.create.params: ${params}" }
+		log.debug "call.create.params: ${params}"
         def callInstance = new Call()
         callInstance.properties = params
         return [callInstance: callInstance]
     }
 
 	def save = {
-		if (debug) { println "DEBUG: call.save.params: ${params}" }
+		log.debug "call.save.params: ${params}"
 		
 		// get the username from the authenticated principal (person) from the auth service
 		def username = springSecurityService?.principal?.getUsername()
@@ -65,7 +65,7 @@ class CallController {
 
 	@Secured(['ROLE_NCS_IT'])
     def edit = {
-		if (debug) { println "DEBUG: call.edit" }
+		log.debug "call.edit"
         def callInstance = Call.get(params.id)
         if (!callInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'call.label', default: 'Call'), params.id])}"
@@ -78,7 +78,7 @@ class CallController {
 
 	@Secured(['ROLE_NCS_IT'])
     def update = {
-		if (debug) { println "DEBUG: call.update.params: ${params}" }
+		log.debug "call.update.params: ${params}"
 
 		        def callInstance = Call.get(params.id)
         if (callInstance) {

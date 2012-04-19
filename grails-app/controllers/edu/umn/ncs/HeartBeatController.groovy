@@ -13,7 +13,7 @@ class HeartBeatController {
 		def username = springSecurityService?.principal?.getUsername()
 
 		def now = new Date()
-		println "heartbeat: '${username}' connected at ${now}."
+		log.debug "heartbeat: '${username}' connected at ${now}."
 		render "<heartbeat>alive</heartbeat>"
 	}
 }

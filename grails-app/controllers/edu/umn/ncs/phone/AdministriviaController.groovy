@@ -24,7 +24,7 @@ class AdministriviaController {
     }
 
     def save = {
-		if (debug) { println "AdministriviaController:save:params::${params}\n" }
+		log.debug "AdministriviaController:save:params::${params}\n"
 
 		// get the username from the authenticated principal (person) from the auth service
 		def username = springSecurityService?.principal?.getUsername()
@@ -46,28 +46,26 @@ class AdministriviaController {
 		}
 
 		params?.formsCompleted?.each{ fcId ->
-			if (debug) { println "AdministriviaController:save:form added::${fcId}\n" }
+			log.debug "AdministriviaController:save:form added::${fcId}\n"
 			def formInstance = Form.read(fcId)
 			administriviaInstance.addToFormsCompleted(formInstance)
 		}
 		
 		params?.tasks?.each{ taskId ->
-			if (debug) { println "AdministriviaController:save:form added::${taskId}\n" }
+			log.debug "AdministriviaController:save:form added::${taskId}\n"
 			def taskInstance = AdminTask.read(taskId)
 			administriviaInstance.addToTasks(taskInstance)
 		}
 
 		        if (administriviaInstance.save(flush: true)) {
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'administrivia.label', default: 'Administrivia'), administriviaInstance.id])}"
-			if (debug) { println "AdministriviaController:save:success\n" }
+			log.debug "AdministriviaController:save:success\n"
             redirect(action: "show", id: administriviaInstance.id)
         }
         else {
-			if (debug) {
-				println "AdministriviaController:save:failure\n"
-				administriviaInstance.errors.each{
-					println "\terror:\n\t\t${it}"
-				}
+			log.error "AdministriviaController:save:failure\n"
+			administriviaInstance.errors.each{
+				log.error "\terror:\n\t\t${it}"
 			}
             render(view: "create", model: [administriviaInstance: administriviaInstance])
         }

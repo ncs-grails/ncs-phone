@@ -13,7 +13,7 @@ class ItemCallResultController {
 
 	@Secured(['ROLE_NCS_IT'])
     def create = {
-		if (debug) { println "DEBUG: ItemCallResultController.create.params: ${params}" }
+		log.debug "DEBUG: ItemCallResultController.create.params: ${params}"
         def itemCallResultInstance = new ItemCallResult()
         itemCallResultInstance.properties = params
         return [itemCallResultInstance: itemCallResultInstance]
@@ -50,7 +50,7 @@ class ItemCallResultController {
 
 	@Secured(['ROLE_NCS_IT'])
     def save = {
-		if (debug) { println "DEBUG: ItemCallResultController.save.params: ${params}" }
+		log.debug "DEBUG: ItemCallResultController.save.params: ${params}"
 
 		        def itemCallResultInstance = new ItemCallResult(params)
         if (itemCallResultInstance.save(flush: true)) {
@@ -68,7 +68,7 @@ class ItemCallResultController {
 		// get the username from the authenticated principal (person) from the auth service
 		def username = springSecurityService?.principal?.getUsername()
 		
-		if (debug) { println "DEBUG: ItemCallResultController.saveCollection.params: ${params}" }
+		log.debug "DEBUG: ItemCallResultController.saveCollection.params: ${params}"
 
 		def trackedItemInstanceList = []
 		def itemCallResultInstanceList = []
@@ -83,9 +83,7 @@ class ItemCallResultController {
 		if (trackedItemInstanceList) {
 			// each tracked item gets a ItemCallResult
 			trackedItemInstanceList.each{ ti ->
-				if (debug) {
-					println "DEBUG: closing out SID: ${ti.id}"
-				}
+				log.debug "DEBUG: closing out SID: ${ti.id}"
 				
 				def itemCallResultInstance = new ItemCallResult(params)
 				itemCallResultInstance.userCreated = username
@@ -102,11 +100,9 @@ class ItemCallResultController {
 		
 					
 				} else {
-					println "FAILED to close out SID: ${ti.id}"
-					if (debug) {
-						itemCallResultInstance.errors.each{
-							println "\t${it}"
-						}
+					log.error "FAILED to close out SID: ${ti.id}"
+					itemCallResultInstance.errors.each{
+						log.error "\t${it}"
 					}
 					flash.message += "Failed to save Final Result for item: ${ti.batch.primaryInstrument}."
 				}
@@ -116,7 +112,7 @@ class ItemCallResultController {
 	}
 	
     def show = {
-		if (debug) { println "DEBUG: ItemCallResultController.show.params: ${params}" }
+		log.debug "DEBUG: ItemCallResultController.show.params: ${params}"
 
         def itemCallResultInstance = ItemCallResult.get(params.id)
         if (!itemCallResultInstance) {
@@ -130,7 +126,7 @@ class ItemCallResultController {
 
 	@Secured(['ROLE_NCS_IT'])
     def edit = {
-		if (debug) { println "DEBUG: ItemCallResultController.edit.params: ${params}" }
+		log.debug "DEBUG: ItemCallResultController.edit.params: ${params}"
 		
         def itemCallResultInstance = ItemCallResult.get(params.id)
         if (!itemCallResultInstance) {
@@ -144,7 +140,7 @@ class ItemCallResultController {
 
 	@Secured(['ROLE_NCS_IT'])
     def update = {
-		if (debug) { println "DEBUG: ItemCallResultController.update.params: ${params}" }
+		log.debug "DEBUG: ItemCallResultController.update.params: ${params}"
 		
         def itemCallResultInstance = ItemCallResult.get(params.id)
         if (itemCallResultInstance) {

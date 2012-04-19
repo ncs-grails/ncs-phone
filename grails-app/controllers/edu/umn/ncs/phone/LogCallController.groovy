@@ -153,7 +153,7 @@ class LogCallController {
 		
 		if ( ! personInstance ) {
 			flash.message = "Could not find person, with Person ID: ${params?.id}"
-			println "Could not find person, with Person ID: ${params?.id}"
+			log.debug "Could not find person, with Person ID: ${params?.id}"
 			redirect(action: 'index')
 		} else {
 						
@@ -169,7 +169,8 @@ class LogCallController {
 				directionInstance = BatchDirection.findByName('outgoing')
 			}
 
-			// look to see if one is still pending
+			// look to see if one is still pending.
+			// pull the last created item of this type
 			def trackedItemInstance = TrackedItem.createCriteria().get{
 				batch{
 					and {
@@ -186,23 +187,12 @@ class LogCallController {
 			def itemCallResultInstance = null
 
 			if (trackedItemInstance) {
-				throw finishThisException
-			}
-			
-			// list all open calls
-			trackedItemInstance = TrackedItem.createCriteria().get{
-				and{
-					person{ idEq(personInstance.id) }
-					isNull('result')
-					batch{
-						instruments {
-							instrument { idEq(instrumentInstance.id) }
-						}
-						direction{ idEq(directionInstance.id) }
-						order('dateCreated', 'desc')
-					}
+				// check for call result
+				def callResult = ItemCallResult.findByTrackedItem(trackedItemInstance)
+				// if the item has a result, or a call result, let's create a new one.
+				if ( trackedItemInstance.result  || callResult ) {
+					trackedItemInstance = null
 				}
-				maxResults(1)
 			}
 
 			if (! trackedItemInstance) {
